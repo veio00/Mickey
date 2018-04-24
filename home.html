@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+<head>
+	<title>Donald 2</title>
+	<meta charset="utf-8"/>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<link href="css/css.css" rel="stylesheet">
+	<!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+	<!--icones do google-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript" src="js/home.js"></script>
+	<script type="text/javascript">
+		var settings = {
+			"async": true,
+			"crossDomain": true,
+			"url": "http://localhost:3182/api/View/CarregaMaquina?grupo=1",
+			"method": "POST",
+			"headers": {
+				"Cache-Control": "no-cache",
+				"Postman-Token": "3bb6501c-abdb-43ed-8bef-db3d106374be"
+			}
+		}
+		
+		$.ajax(settings).done(function (response) {
+			var keepAlive="btn btn-lg btn-danger";
+			var view = "\n";
+			for (var i in response) {
+				if(response[i].Keep_Alive == 1){
+					keepAlive = "btn btn-lg btn-success";
+				}
+					
+				view += '	<button type="button" class="'+keepAlive+'"><i class="maquina material-icons" id='+response[i].idMaquina+' style="font-size: 300%;">computer</i></button>';
+				keepAlive="btn btn-lg btn-danger";
+			}
+			view += "\n";
+			document.getElementById('Tela').innerHTML = view;
+			console.log(response);
+		console.log(response);
+		});
+	</script>
+
+</head>
+<body>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="btn-group">
+		<button type="button" class="btn btn-lg btn-default">Default</button>
+        <button type="button" class="btn btn-lg btn-primary">Primary</button>
+        <button type="button" class="btn btn-lg btn-success">Success</button>
+        <button type="button" class="btn btn-lg btn-info">Info</button>
+        <button type="button" class="btn btn-lg btn-warning">Warning</button>
+        <button type="button" class="btn btn-lg btn-danger">Danger</button>
+        <button type="button" class="btn btn-lg btn-link">Link</button>
+		<button type="button" class="btn btn-danger">Action</button>
+		<button type="button" class="btn btn-danger dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<span class="sr-only">Toggle Dropdown</span>
+		<div class="dropdown-menu" id="empresa">
+			<a class="dropdown-item" href="#">Action</a>
+			<a class="dropdown-item" href="#">Another action</a>
+			<a class="dropdown-item" href="#">Something else here</a>
+			<div class="dropdown-divider"></div>
+			<a class="dropdown-item" href="#">Separated link</a>
+		</div>
+		</button>
+	</div>
+    </nav>
+
+	  <div class="row">
+        <div class="col-md-3 w-100 p-3" id="grupo">
+		<h1> Maquinas [empresa]</h1>
+			<div id="Tela" class="d-flex align-content-stretch flex-wrap">
+		
+			</div>
+		</div>
+        <div class="col-md-9 w-100 p-3 info" >
+		<h1> Empresa [Nome da Maquina]</h1>
+			<div class="row">
+				<div class="col-md-12" id="chart_div" > </div>
+			</div>
+		</div>
+
+</body>
+</html>
