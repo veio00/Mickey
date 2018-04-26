@@ -1,14 +1,15 @@
 <!--https://jsonplaceholder.typicode.com/users/-->
-var jsonS;
+var jsonC;var jsonM;
 	$(document).ready(function(){
 
 		google.charts.load('current', {'packages':['gauge']});
 		google.charts.setOnLoadCallback(drawChart);
 		empresa();
+		maquinas(1);
 	function drawChart() {
 		var settings = {
 		"async": false,
-		"url": "http://localhost:3182/api/View/getLeitura",
+		"url": "http://donald2.azurewebsites.net/api/View/CarregaLeitura",
 		"method": "post",
 		"dataType": "json",
 		"headers": {
@@ -18,14 +19,14 @@ var jsonS;
 		}
 		
 		$.ajax(settings).done(function (response) {
-			jsonS =response[0];
+			jsonC =response[0];
 		});
 			
         var data = google.visualization.arrayToDataTable([
           ['Label', 'Value'],
-          ['Memory', jsonS['Cpu']],
-          ['CPU', jsonS['Mram']],
-          ['Disk', jsonS['Hd']]
+          ['Memory', jsonC['Cpu']],
+          ['CPU', jsonC['Mram']],
+          ['Disk', jsonC['Hd']]
         ]);
 
         var options = {
@@ -44,9 +45,10 @@ var jsonS;
           chart.draw(data, options);
         }, 1000);
     }
+	
 	function empresa() {
 		var maq = {
-		"url": "http://localhost:3182/api/View/CarregaEmpresa",
+		"url": "http://donald2.azurewebsites.net/api/View/CarregaEmpresa",
 		"method": "post",
 		"dataType": "json",
 		"headers": {
@@ -58,15 +60,59 @@ var jsonS;
 		$.ajax(maq).done(function (response) {
 			var view = "\n";
 			for (var i in response) {
-			view += '	<a class="dropdown-item" id='+response[i].idGrupo+'+href="#">'+response[i].Nome_grupo +'</a> ';
+			view += '	<a class="dropdown-item" id="Escolha" value='+response[i].idGrupo+' href="#" >'+response[i].Nome_grupo +'</a> ';
 			}
 			view += "\n";
 			document.getElementById('empresa').innerHTML = view;
-			console.log(json);
 		}, 
 		function (errorCode, errorText) {
 			console.log('Código: ' + errorCode);
 			console.log('Mensagem de erro: ' + errorText);
 		});
 	}
+	
+	
+	function maquinas(grupo) {
+		
+		var settings = {
+			"async": true,
+			"crossDomain": true,
+			"url": "http://donald2.azurewebsites.net/api/View/CarregaMaquina?grupo="+grupo+"",
+			"method": "POST",
+			"headers": {
+				"Cache-Control": "no-cache",
+				"Postman-Token": "3bb6501c-abdb-43ed-8bef-db3d106374be"
+			}
+		}
+		
+		$.ajax(settings).done(function (response) {
+			var keepAlive="btn btn-lg btn-danger";
+			jsonM = response;
+			var view = "\n";
+			for (var i in response) {
+				
+				if(response[i].Keep_Alive == 1){
+					keepAlive = "btn btn-lg btn-success";
+				}
+					
+				view += '	<button type="button" class="'+keepAlive+' id="mostra" value='+i+'><i class="maquina material-icons"  style="font-size: 300%;">computer</i> <br><span style="font-size: small;">'+response[i].Nome_Maquina+'</span></button>';
+				keepAlive="btn btn-lg btn-danger";
+			}
+			view += "\n";
+			document.getElementById('Tela').innerHTML = view;
+		});
+		
+		
+		
+		
+	}
+	
+	$(".dropdown-item").on("click", function(){
+		var NomeEmpresa = $(this).text();
+		var Cod = $(this).attr('value');
+		maquinas(Cod);
+		document.getElementById('Letreiro1').innerHTML = NomeEmpresa;
+				
+	});
+
 });

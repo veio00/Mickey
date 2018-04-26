@@ -27,6 +27,14 @@ footer{
 #Tela > button,i {
 	margin:auto;
 	margin-top: 3%;
+	
+}#Tela > button {
+	width:30%;
+
+}
+#Tela > span {
+	font-size:small;
+
 }
 
 .maquina {
